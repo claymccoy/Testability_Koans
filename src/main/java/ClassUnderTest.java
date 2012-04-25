@@ -4,8 +4,8 @@ public class ClassUnderTest {
 
     final Collaborator collaborator;
 
-    public ClassUnderTest() {
-        this.collaborator = Collaborator.INSTANCE;
+    public ClassUnderTest(Collaborator collaborator) {
+        this.collaborator = collaborator;
     }
 
     String sayHello() {
