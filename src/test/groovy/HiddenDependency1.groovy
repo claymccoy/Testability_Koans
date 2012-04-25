@@ -1,6 +1,6 @@
 import spock.lang.*
 
-class PassingSpec extends Specification {
+class HiddenDependency1 extends Specification {
 
     final classUnderTest = new ClassUnderTest()
 

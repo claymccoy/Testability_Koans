@@ -1,0 +1,56 @@
+
+final groupName = 'Testability Koans'
+
+task hint() {
+    group = groupName
+    description = 'Gives a hint about the solution.'
+} << {
+    println 'Be careful where you use new.'
+}
+
+task levels() {
+    group = groupName
+    description = 'List all available levels.'
+} << {
+    Process process = 'git branch'.execute()
+    println process.in.text
+}
+
+task level () {
+    group = groupName
+    description = 'Start a new level. Usage: ./gradlew level -PlevelName=newCollaborator'
+} << {
+    String levels = 'git branch'.execute().in.text
+    String command
+    if (levels.contains("solving_${levelName}")) {
+        command = "git checkout solving_${levelName}"
+    } else {
+        command = "git checkout -b solving_${levelName} ${levelName}^"
+    }
+    println command
+    Process process = command.execute()
+    println process.in.text
+}
+
+final loadClass = { GroovyClassLoader loader, String name ->
+    loader.parseClass(new File("src/main/java/${name}.java"))
+}.curry(new GroovyClassLoader())
+
+task solve(dependsOn: 'test') {
+    group = groupName
+    description = 'Solve the current level.'
+} << {
+
+    Class collaborator = loadClass('Collaborator')
+    Class classUnderTest = loadClass('ClassUnderTest')
+
+    final constructorTakingCollaborator  = classUnderTest.constructors.find {
+        it.parameterTypes.contains(collaborator)
+    }
+    if (constructorTakingCollaborator) {
+        println 'Solved!'
+    } else {
+        println 'You must have cheated!'
+        throw new IllegalStateException('Failed testable code structure analysis.')
+    }
+}
