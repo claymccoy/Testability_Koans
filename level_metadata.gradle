@@ -1,0 +1,40 @@
+
+final groupName = 'Testability Koans'
+
+task hint() {
+    group = groupName
+    description = 'Gives a hint about the solution.'
+} << {
+    println 'This is an example of a working test.'
+}
+
+task levels() {
+    group = groupName
+    description = 'List all available levels.'
+} << {
+    Process process = 'git branch'.execute()
+    println process.in.text
+}
+
+task level () {
+    group = groupName
+    description = 'Start a new level. Usage: ./gradlew level -PlevelName=newCollaborator'
+} << {
+    String levels = 'git branch'.execute().in.text
+    String command
+    if (levels.contains("solving_${levelName}")) {
+        command = "git checkout solving_${levelName}"
+    } else {
+        command = "git checkout -b solving_${levelName} ${levelName}^"
+    }
+    println command
+    Process process = command.execute()
+    println process.in.text
+}
+
+task solve(dependsOn: 'test') {
+    group = groupName
+    description = 'Solve the current level.'
+} << {
+    println 'Solved!'
+}
