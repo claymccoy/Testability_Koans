@@ -1,7 +1,14 @@
 
 
 public class ClassUnderTest {
+
+    final Collaborator collaborator;
+
+    public ClassUnderTest() {
+        this.collaborator = Collaborator.INSTANCE;
+    }
+
     String sayHello() {
-        return "Hello World!";
+        return collaborator.collaborate();
     }
 }
